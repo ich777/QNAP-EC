@@ -252,6 +252,15 @@ static int __init qnap_ec_is_chip_present(void)
   uint8_t byte1;
   uint8_t byte2;
 
+  // Check for /etc/unraid-version, if found set qnap_ec_check_for_chip to false
+  if (qnap_ec_check_for_chip) {
+    struct file* file = filp_open("/etc/unraid-version", O_RDONLY, 0);
+    if (!IS_ERR(file)) {
+        qnap_ec_check_for_chip = false; 
+        filp_close(file, NULL);
+    }
+  }
+ 
   // Check if we should not check for the chip
   if (!qnap_ec_check_for_chip)
     return 0;
