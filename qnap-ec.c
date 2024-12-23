@@ -1214,7 +1214,7 @@ static long int qnap_ec_misc_device_ioctl(struct file* file, unsigned int comman
   {
     case QNAP_EC_IOCTL_CALL:
       // Make sure we can write the data to user space
-      if (access_ok(argument, sizeof(struct qnap_ec_ioctl_command)) == 0)
+      if (!access_ok((const void __user *)argument, sizeof(struct qnap_ec_ioctl_command)))
         return -EFAULT;
 
       // Copy the I/O control command data from the data structure to the user space
@@ -1225,7 +1225,7 @@ static long int qnap_ec_misc_device_ioctl(struct file* file, unsigned int comman
       break;
     case QNAP_EC_IOCTL_RETURN:
       // Make sure we can read the data from user space
-      if (access_ok(argument, sizeof(struct qnap_ec_ioctl_command)) == 0)
+      if (!access_ok((const void __user *)argument, sizeof(struct qnap_ec_ioctl_command)))
         return -EFAULT;
   
       // Copy the I/O control command data from the user space to the data structure
